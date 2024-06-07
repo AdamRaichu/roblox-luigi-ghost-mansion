@@ -1,5 +1,6 @@
 interface ReplicatedStorage extends Instance {
   SystemChatEvent: RemoteEvent;
+  GameStartEvent: RemoteEvent;
 }
 
 interface TextChatService extends Instance {

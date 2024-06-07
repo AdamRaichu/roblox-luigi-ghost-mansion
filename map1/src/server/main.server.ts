@@ -16,4 +16,8 @@ Players.PlayerAdded.Connect((player) => {
   // eslint-disable-next-line roblox-ts/lua-truthiness
   const teamName = playerTeam ? playerTeam : "ERROR: No team preference set. Please report this to the developer.";
   triggerSystemMessage(`Player ${player.Name} joined the game as a ${teamName}.`);
+
+  // player.Character
 });
+
+// FIXME: Prevent super fast character rotation.

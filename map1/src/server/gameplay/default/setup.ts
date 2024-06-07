@@ -5,10 +5,16 @@ import { shuffleArray } from "shared/array_utils";
 const Players = game.GetService("Players");
 const MemoryStore = game.GetService("MemoryStoreService");
 const Teams = game.GetService("Teams");
+const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
 export function startGame(players: Player[]) {
   const [Ghost, Luigis] = assignRoles(players);
   addGhostOutfit(Ghost);
+  // TODO: Add Luigi's outfit.
+  // Teleport players to spawn points.
+
+  // Trigger client setup.
+  ReplicatedStorage.GameStartEvent.FireAllClients();
 }
 
 export function assignRoles(players: Player[]): [Player, Player[]] {
