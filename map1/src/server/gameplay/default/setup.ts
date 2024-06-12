@@ -1,6 +1,9 @@
 import { addGhostOutfit } from "server/add_costume";
 import { triggerSystemMessage } from "server/system_message";
 import { shuffleArray } from "shared/array_utils";
+import { AwarenessLevel, GhostVisibilityHelperCommand } from "shared/enums";
+import { makePlayerInvisible } from "shared/visibility";
+import { createAwarenessIndicator, updateAwarenessIndicator } from "./awareness";
 
 const Players = game.GetService("Players");
 const MemoryStore = game.GetService("MemoryStoreService");
@@ -12,9 +15,26 @@ export function startGame(players: Player[]) {
   addGhostOutfit(Ghost);
   // TODO: Add Luigi's outfit.
   // Teleport players to spawn points.
+  const spawnPointFolder = game.Workspace.WaitForChild("Map").WaitForChild("SpawnPoints") as SpawnPointsFolder;
+  Ghost.Character?.MoveTo(spawnPointFolder.Ghost.Position);
+
+  for (let i = 0; i < Luigis.size(); i++) {
+    const luigi = Luigis[i];
+    const part = spawnPointFolder.WaitForChild("Luigi" + tostring(i + 1)) as Part;
+    luigi.Character?.MoveTo(part.Position);
+
+    createAwarenessIndicator(luigi);
+    updateAwarenessIndicator(luigi, AwarenessLevel.Exclamation);
+  }
 
   // Trigger client setup.
   ReplicatedStorage.GameStartEvent.FireAllClients();
+
+  // Freeze players temporarily.
+  // Start music.
+  // Make the ghost invisible on all, but visible to the ghost.
+  makePlayerInvisible(Ghost);
+  ReplicatedStorage.GhostVisibilityHelper.FireClient(Ghost, GhostVisibilityHelperCommand.GhostIsHidden);
 }
 
 export function assignRoles(players: Player[]): [Player, Player[]] {
@@ -43,13 +63,9 @@ export function assignRoles(players: Player[]): [Player, Player[]] {
     }
   });
 
-  print(undecidedPlayers);
-
   wannabeGhosts = shuffleArray(wannabeGhosts);
   wannabeLuigis = shuffleArray(wannabeLuigis);
   undecidedPlayers = shuffleArray(undecidedPlayers);
-
-  print(undecidedPlayers);
 
   if (wannabeGhosts.size() === 0) {
     if (undecidedPlayers.size() === 0) {
@@ -73,7 +89,7 @@ export function assignRoles(players: Player[]): [Player, Player[]] {
     wannabeLuigis.push(player);
   }
 
-  const Luigis = wannabeLuigis;
+  const Luigis = shuffleArray(wannabeLuigis);
 
   for (const luigi of Luigis) {
     luigi.Team = Teams.Luigi;

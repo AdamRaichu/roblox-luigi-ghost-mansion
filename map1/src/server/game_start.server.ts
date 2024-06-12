@@ -4,8 +4,11 @@ import { triggerSystemMessage } from "./system_message";
 const Players = game.GetService("Players");
 const TeleportService = game.GetService("TeleportService");
 
-wait(5);
-triggerSystemMessage("Game starting in 25 seconds.");
+triggerSystemMessage("Game starting in 60 seconds.");
+wait(15);
+triggerSystemMessage("Game starting in 45 seconds.");
+wait(15);
+triggerSystemMessage("Game starting in 30 seconds.");
 wait(5);
 triggerSystemMessage("Game starting in 15 seconds.");
 wait(5);
