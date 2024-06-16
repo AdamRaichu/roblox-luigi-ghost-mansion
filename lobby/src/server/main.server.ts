@@ -13,7 +13,8 @@ const MapIds = {
 
 function teleportToMap(players: Player[], mapId: number) {
   const tpOpts = new Instance("TeleportOptions");
-  Teleport.TeleportAsync(mapId, players);
+  tpOpts.ShouldReserveServer = true;
+  Teleport.TeleportAsync(mapId, players, tpOpts);
 }
 
 function getPlayerCountTimer() {
