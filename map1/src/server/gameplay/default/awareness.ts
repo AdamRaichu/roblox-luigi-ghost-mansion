@@ -1,4 +1,5 @@
 import { AwarenessLevel } from "shared/enums";
+import * as Constants from "shared/contants";
 
 const ServerStorage = game.GetService("ServerStorage");
 
@@ -66,4 +67,18 @@ export function updateAwarenessIndicator(player: Player, level: AwarenessLevel) 
     default:
       break;
   }
+}
+
+export function getAwarenessLevel(distance: number): AwarenessLevel {
+  if (distance < 0) {
+    warn(`Received negative number in getAwarenessLevel (${distance}). Returning AwarenessLevel.DoubleExclamation.`)
+  }
+  if (distance <= Constants.DoubleExclamationDistance) {
+    return AwarenessLevel.DoubleExclamation
+  } else if (distance > Constants.DoubleExclamationDistance && distance <= Constants.ExclamationDistance) {
+    return AwarenessLevel.Exclamation;
+  } else if (distance > Constants.ExclamationDistance && distance <= Constants.QuestionDistance) {
+    return AwarenessLevel.Question;
+  }
+  return AwarenessLevel.Oblivious;
 }
