@@ -3,7 +3,8 @@
 	"globIgnorePaths": [
 		"**/package.json",
 		"**/tsconfig.json",
-		"**/Icon/PackageLink.model.json"
+		"**/Icon/PackageLink.model.json",
+		"**src/*/deprecated/**"
 	],
 	"tree": {
 		"$className": "DataModel",
