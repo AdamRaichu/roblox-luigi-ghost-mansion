@@ -1,5 +1,4 @@
-import Roact from "@rbxts/roact";
-import { roleSelect } from "./elements/role_select";
+// import Roact from "@rbxts/roact";
 import Icon from "shared/Icon";
 
 const Players = game.GetService("Players");
