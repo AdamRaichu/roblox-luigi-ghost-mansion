@@ -10,6 +10,7 @@ interface ServerStorage extends Instance {
   Question: Model;
   Exclamation: Model;
   DoubleExclamation: Model;
+  FlashLight: FlashLightTool;
 }
 
 interface TextChatService extends Instance {

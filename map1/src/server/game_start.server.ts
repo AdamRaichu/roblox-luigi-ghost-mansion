@@ -3,11 +3,16 @@ import { triggerSystemMessage } from "./system_message";
 
 const Players = game.GetService("Players");
 const TeleportService = game.GetService("TeleportService");
+const RunService = game.GetService("RunService");
 
-triggerSystemMessage("Game starting in 60 seconds.");
-wait(15);
-triggerSystemMessage("Game starting in 45 seconds.");
-wait(15);
+if (!RunService.IsStudio()) {
+  triggerSystemMessage("Game starting in 60 seconds.");
+  wait(15);
+  triggerSystemMessage("Game starting in 45 seconds.");
+  wait(15);
+} else {
+  print("Skipping the first 30 seconds of delay since we are in studio.");
+}
 triggerSystemMessage("Game starting in 30 seconds.");
 wait(5);
 triggerSystemMessage("Game starting in 15 seconds.");
@@ -34,6 +39,8 @@ if (playerCount === 1) {
 } else if (playerCount === 2) {
   triggerSystemMessage("Two player games are not yet supported. Sending you back to the lobby.");
   TeleportService.TeleportAsync(13862972119, players);
-} else {
+} else if (playerCount > 2 && playerCount < 5) {
   startGame(players);
+} else {
+  print("No players. OR 5+ players. Which would be weird.");
 }

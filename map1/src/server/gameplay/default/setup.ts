@@ -1,8 +1,8 @@
 import { addGhostOutfit } from "server/add_costume";
-import { AwarenessLevel, GhostVisibilityHelperCommand } from "shared/enums";
+import { GhostVisibilityHelperCommand } from "shared/enums";
 import { makePlayerInvisible } from "shared/visibility";
-import { createAwarenessIndicator, updateAwarenessIndicator } from "./awareness";
 import { assignRoles } from "../roles";
+import { createAwarenessIndicator, updateAwarenessForAll } from "./awareness";
 
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
@@ -20,7 +20,6 @@ export function startGame(players: Player[]) {
     luigi.Character?.MoveTo(part.Position);
 
     createAwarenessIndicator(luigi);
-    updateAwarenessIndicator(luigi, AwarenessLevel.Exclamation);
   }
 
   // Trigger client setup.
@@ -32,4 +31,11 @@ export function startGame(players: Player[]) {
   // Make the ghost invisible on all, but visible to the ghost.
   makePlayerInvisible(Ghost);
   ReplicatedStorage.GhostVisibilityHelper.FireClient(Ghost, GhostVisibilityHelperCommand.GhostIsHidden);
+
+  // Testing
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    wait(0.1);
+    updateAwarenessForAll(Luigis, Ghost);
+  }
 }

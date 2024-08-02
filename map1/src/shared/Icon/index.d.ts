@@ -48,7 +48,7 @@ declare class Icon {
   notify(this: Icon, clearNoticeEvent: GoodSignal | BindableEvent): Icon;
   clearNotices(this: Icon): Icon;
   disableOverlay(this: Icon, bool: boolean): Icon;
-  setImage(this: Icon, imageId: unknown /* string | number ?*/, iconState: IconState): Icon;
+  setImage(this: Icon, imageId: unknown /* string | number ?*/, iconState?: IconState): Icon;
   setLabel(this: Icon, text: string, iconState?: IconState): Icon;
   setOrder(this: Icon, order: number, iconState: IconState): Icon;
   setCornerRadius(this: Icon, scale: number, offset: number, iconState: IconState): Icon;

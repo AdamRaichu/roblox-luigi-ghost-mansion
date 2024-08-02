@@ -19,3 +19,14 @@ interface DoubleExclamationModel extends Model {
     Dot: Part;
   };
 }
+
+interface FlashLightTool extends Tool {
+  Lights: Folder & {
+    L1: Part;
+    L2: Part;
+    L3: Part;
+    L4: Part;
+    L5: Model;
+  };
+  Handle: Part;
+}

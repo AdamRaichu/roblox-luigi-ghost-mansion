@@ -4,6 +4,7 @@ import { game_ui } from "./elements/game_ui";
 import { Timer } from "shared/timer";
 import { makePlayerVisible } from "shared/visibility";
 import { GhostVisibilityHelperCommand } from "shared/enums";
+import Icon from "shared/Icon";
 
 print(makeHello("main.client.ts"));
 
@@ -17,16 +18,14 @@ ReplicatedStorage.GameStartEvent.OnClientEvent.Connect(() => {
 
   const me = Players.LocalPlayer;
 
-  const guiTree = Roact.mount(game_ui, me.FindFirstChildOfClass("PlayerGui"));
+  const gameTimer = new Icon().setImage(8184068342).align("Center");
 
-  new Timer(
-    300,
-    () => {
-      Roact.unmount(guiTree);
-    },
-    0,
-    true,
-  );
+  spawn(() => {
+    for (let i = 300; i > 0; i--) {
+      wait(1);
+      gameTimer.setLabel(tostring(i));
+    }
+  });
 
   updateCamera();
 
