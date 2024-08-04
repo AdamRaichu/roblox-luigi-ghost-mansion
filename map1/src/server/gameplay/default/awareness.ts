@@ -17,7 +17,6 @@ export function createAwarenessIndicator(player: Player): void {
   constraint.Attachment1 = indicatorAttach;
 }
 
-// TODO: Don't destroy the old indicator if it doesn't need to be changed.
 export function updateAwarenessIndicator(player: Player, level: AwarenessLevel): void {
   const questionIndicator = ServerStorage.Question.Clone() as QuestionModel;
   const exclamationIndicator = ServerStorage.Exclamation.Clone() as ExclamationModel;
