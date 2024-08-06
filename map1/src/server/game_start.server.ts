@@ -11,6 +11,7 @@ if (!RunService.IsStudio()) {
   triggerSystemMessage("Game starting in 45 seconds.");
   wait(15);
 } else {
+  wait(5);
   print("Skipping the first 30 seconds of delay since we are in studio.");
 }
 triggerSystemMessage("Game starting in 30 seconds.");

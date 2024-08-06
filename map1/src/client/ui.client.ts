@@ -1,5 +1,3 @@
-// import Icon from "shared/Icon";
-
 const StarterGui = game.GetService("StarterGui");
 
 // Disable the leaderboard.

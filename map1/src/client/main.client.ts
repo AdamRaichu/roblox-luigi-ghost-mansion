@@ -4,7 +4,7 @@ import { game_ui } from "./elements/game_ui";
 import { Timer } from "shared/timer";
 import { makePlayerVisible } from "shared/visibility";
 import { GhostVisibilityHelperCommand } from "shared/enums";
-import Icon from "shared/Icon";
+import { Icon } from "@rbxts/topbar-plus";
 
 print(makeHello("main.client.ts"));
 
@@ -18,7 +18,7 @@ ReplicatedStorage.GameStartEvent.OnClientEvent.Connect(() => {
 
   const me = Players.LocalPlayer;
 
-  const gameTimer = new Icon().setImage(8184068342).align("Center");
+  const gameTimer = new Icon().setImage("8184068342").align("Center");
 
   spawn(() => {
     for (let i = 300; i > 0; i--) {

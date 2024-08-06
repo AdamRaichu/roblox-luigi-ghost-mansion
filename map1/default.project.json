@@ -2,8 +2,7 @@
 	"name": "roblox-luigi-ghost-mansion-map1",
 	"globIgnorePaths": [
 		"**/package.json",
-		"**/tsconfig.json",
-		"**/Icon/PackageLink.model.json"
+		"**/tsconfig.json"
 	],
 	"tree": {
 		"$className": "DataModel",
