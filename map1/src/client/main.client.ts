@@ -13,21 +13,21 @@ const Players = game.GetService("Players");
 const Teams = game.GetService("Teams");
 const Lighting = game.GetService("Lighting");
 
-ReplicatedStorage.GameStartEvent.OnClientEvent.Connect(() => {
-  print("Received GameStartEvent on client.");
+ReplicatedStorage.GamePreStartEvent.OnClientEvent.Connect(() => {
+  updateCamera();
+});
 
+ReplicatedStorage.GameStartEvent.OnClientEvent.Connect(() => {
   const me = Players.LocalPlayer;
 
   const gameTimer = new Icon().setImage("8184068342").align("Center");
 
   spawn(() => {
     for (let i = 300; i > 0; i--) {
-      wait(1);
+      task.wait(1);
       gameTimer.setLabel(tostring(i));
     }
   });
-
-  updateCamera();
 
   ReplicatedStorage.GhostVisibilityHelper.OnClientEvent.Connect((command: GhostVisibilityHelperCommand & string) => {
     switch (command) {
@@ -51,7 +51,7 @@ function updateCamera() {
   const camera = game.Workspace.CurrentCamera as Camera;
   const target = game.Workspace.WaitForChild("CameraView") as Part;
   camera.CameraType = Enum.CameraType.Custom;
-  wait(0.1);
+  task.wait(0.1);
   camera.CameraType = Enum.CameraType.Scriptable;
   camera.CFrame = target.CFrame;
 }

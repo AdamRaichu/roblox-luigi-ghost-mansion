@@ -62,7 +62,7 @@ export class GameTimerComponent extends Roact.Component {
           break;
         }
 
-        wait(1);
+        task.wait(1);
       }
     });
   }

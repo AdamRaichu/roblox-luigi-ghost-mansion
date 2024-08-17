@@ -1,12 +1,23 @@
 interface ReplicatedStorage extends Instance {
   SystemChatEvent: RemoteEvent;
   GameStartEvent: RemoteEvent;
+  GamePreStartEvent: RemoteEvent;
   MusicController: RemoteEvent;
   GhostVisibilityHelper: RemoteEvent;
+
+  GhostUserId: IntValue;
 }
 
 interface ServerStorage extends Instance {
-  GhostOutfit: Accessory;
+  CONFIG: Folder & {
+    StudioOnly: Folder & {
+      UseLongStartDelay: BoolValue;
+    };
+  };
+  GhostItems: Folder & {
+    GhostOutfit: GhostOutfit;
+    Dash: Tool;
+  };
   Question: Model;
   Exclamation: Model;
   DoubleExclamation: Model;
@@ -23,14 +34,6 @@ interface TextChatService extends Instance {
 interface Teams extends Instance {
   Ghost: Team;
   Luigi: Team;
-}
-
-interface SpawnPointsFolder extends Folder {
-  Ghost: Part;
-  Luigi1: Part;
-  Luigi2: Part;
-  Luigi3: Part;
-  Luigi4: Part;
 }
 
 interface Accessory extends Accoutrement {

@@ -4,32 +4,33 @@ import { triggerSystemMessage } from "./system_message";
 const Players = game.GetService("Players");
 const TeleportService = game.GetService("TeleportService");
 const RunService = game.GetService("RunService");
+const ServerStorage = game.GetService("ServerStorage");
 
-if (!RunService.IsStudio()) {
+if (!RunService.IsStudio() || (RunService.IsStudio() && ServerStorage.CONFIG.StudioOnly.UseLongStartDelay.Value)) {
   triggerSystemMessage("Game starting in 60 seconds.");
-  wait(15);
+  task.wait(15);
   triggerSystemMessage("Game starting in 45 seconds.");
-  wait(15);
+  task.wait(15);
 } else {
-  wait(5);
+  task.wait(5);
   print("Skipping the first 30 seconds of delay since we are in studio.");
 }
 triggerSystemMessage("Game starting in 30 seconds.");
-wait(5);
+task.wait(5);
 triggerSystemMessage("Game starting in 15 seconds.");
-wait(5);
+task.wait(5);
 triggerSystemMessage("Game starting in 10 seconds.");
-wait(5);
+task.wait(5);
 triggerSystemMessage("Game starting in 5...");
-wait(1);
+task.wait(1);
 triggerSystemMessage("4...");
-wait(1);
+task.wait(1);
 triggerSystemMessage("3...");
-wait(1);
+task.wait(1);
 triggerSystemMessage("2...");
-wait(1);
+task.wait(1);
 triggerSystemMessage("1...");
-wait(1);
+task.wait(1);
 
 const players = Players.GetPlayers();
 const playerCount = players.size();

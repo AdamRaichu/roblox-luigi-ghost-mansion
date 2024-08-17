@@ -29,8 +29,12 @@ declare global {
       L2: Part;
       L3: Part;
       L4: Part;
-      L5: Model;
+      L5: Model & {
+        L4: Part;
+        L5: Part;
+      };
     };
+    CurrentPower: IntValue;
     Handle: Part;
   }
 
@@ -42,5 +46,18 @@ declare global {
       L4: Zone;
       L5: Zone;
     };
+  }
+
+  interface SpawnPointsFolder extends Folder {
+    Ghost: Part;
+    Luigi1: Part;
+    Luigi2: Part;
+    Luigi3: Part;
+    Luigi4: Part;
+  }
+
+  interface GhostOutfit extends Accessory {
+    Handle: MeshPart;
+    Hitbox: Part;
   }
 }

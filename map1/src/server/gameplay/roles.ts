@@ -3,6 +3,7 @@ import { shuffleArray } from "shared/array_utils";
 
 const MemoryStore = game.GetService("MemoryStoreService");
 const Teams = game.GetService("Teams");
+const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
 /**
  *
@@ -55,6 +56,7 @@ export function assignRoles(players: Player[]): [Player, Player[]] {
 
   const GhostPlayer = wannabeGhosts.pop() as Player;
   GhostPlayer.Team = Teams.Ghost;
+  ReplicatedStorage.GhostUserId.Value = GhostPlayer.UserId;
 
   // All remaining players become Luigis.
   for (const player of undecidedPlayers) {

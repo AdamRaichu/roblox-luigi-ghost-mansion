@@ -1,18 +1,37 @@
 import { addGhostOutfit } from "server/add_costume";
-import { GhostVisibilityHelperCommand } from "shared/enums";
+import { ActiveBeam, GhostVisibilityHelperCommand } from "shared/enums";
 import { makePlayerInvisible, makePlayerVisible } from "shared/visibility";
+import { flashlightZoneListener, getZones } from "../flashlight_utils";
 import { assignRoles } from "../roles";
 import { createAwarenessIndicator, updateAwarenessForAll } from "./awareness";
-import { Zone } from "@rbxts/zone-plus";
 
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 const ServerStorage = game.GetService("ServerStorage");
+const Lighting = game.GetService("Lighting");
+const TweenService = game.GetService("TweenService");
 
 export function startGame(players: Player[]) {
+  ReplicatedStorage.GamePreStartEvent.FireAllClients();
+
   const [Ghost, Luigis] = assignRoles(players);
   addGhostOutfit(Ghost);
   // TODO: Add Luigi's outfit.
-  // Teleport players to spawn points.
+
+  const ghostBp = Ghost.FindFirstChildOfClass("Backpack");
+  const dash = ServerStorage.GhostItems.Dash.Clone();
+  const ghostHum = Ghost.Character?.FindFirstChildOfClass("Humanoid") as Humanoid;
+  dash.Parent = ghostBp;
+  dash.Equipped.Connect(() => {
+    makePlayerVisible(Ghost);
+    ReplicatedStorage.GhostVisibilityHelper.FireClient(Ghost, GhostVisibilityHelperCommand.GhostBecomesVisible);
+    ghostHum.WalkSpeed = 32;
+  });
+  dash.Unequipped.Connect(() => {
+    makePlayerInvisible(Ghost);
+    ReplicatedStorage.GhostVisibilityHelper.FireClient(Ghost, GhostVisibilityHelperCommand.GhostIsHidden);
+    ghostHum.WalkSpeed = 16;
+  });
+
   const spawnPointFolder = game.Workspace.WaitForChild("Map").WaitForChild("SpawnPoints") as SpawnPointsFolder;
   Ghost.Character?.MoveTo(spawnPointFolder.Ghost.Position);
 
@@ -20,8 +39,8 @@ export function startGame(players: Player[]) {
 
   for (let i = 0; i < Luigis.size(); i++) {
     const luigi = Luigis[i];
-    const part = spawnPointFolder.WaitForChild("Luigi" + tostring(i + 1)) as Part;
-    luigi.Character?.MoveTo(part.Position);
+    const startPoint = spawnPointFolder.WaitForChild("Luigi" + tostring(i + 1)) as Part;
+    luigi.Character?.MoveTo(startPoint.Position);
 
     createAwarenessIndicator(luigi);
 
@@ -29,48 +48,51 @@ export function startGame(players: Player[]) {
     const bp = luigi.FindFirstChildOfClass("Backpack");
     const clonedLight = ServerStorage.FlashLight.Clone();
     clonedLight.Parent = bp;
-
-    // Setup flashlight zones.
-    const lights = clonedLight.Lights;
-    lightZones[luigi.UserId] = {
-      L1: new Zone(lights.L1),
-      L2: new Zone(lights.L2),
-      L3: new Zone(lights.L3),
-      L4: new Zone(lights.L4),
-      L5: new Zone(lights.L5),
-    };
+    lightZones[luigi.UserId] = getZones(clonedLight);
+    const zones = lightZones[luigi.UserId];
+    const OutfitHitbox = ((Ghost.Character as Model).WaitForChild("GhostOutfit") as GhostOutfit).Hitbox;
+    zones.L1.trackItem(OutfitHitbox);
+    zones.L2.trackItem(OutfitHitbox);
+    zones.L3.trackItem(OutfitHitbox);
+    zones.L4.trackItem(OutfitHitbox);
+    zones.L5.trackItem(OutfitHitbox);
+    zones.L1.onItemEnter(OutfitHitbox, () => {
+      print("OutfitHitbox entered L1");
+    });
+    zones.L1.itemEntered.Connect((entered) => {
+      flashlightZoneListener(clonedLight, ActiveBeam.L1, entered);
+    });
+    zones.L2.itemEntered.Connect((entered) => {
+      flashlightZoneListener(clonedLight, ActiveBeam.L2, entered);
+    });
+    zones.L3.itemEntered.Connect((entered) => {
+      flashlightZoneListener(clonedLight, ActiveBeam.L3, entered);
+    });
+    zones.L4.itemEntered.Connect((entered) => {
+      flashlightZoneListener(clonedLight, ActiveBeam.L4, entered);
+    });
+    zones.L5.itemEntered.Connect((entered) => {
+      flashlightZoneListener(clonedLight, ActiveBeam.L5, entered);
+    });
   }
 
-  // Trigger client setup.
-  ReplicatedStorage.GameStartEvent.FireAllClients();
-
   // TODO: Freeze players temporarily.
-  // TODO: Start music.
+  task.wait(2);
+  TweenService.Create(Lighting, new TweenInfo(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.In), {
+    Brightness: 0,
+  }).Play();
 
   // Make the ghost invisible on all, but visible to the ghost.
   makePlayerInvisible(Ghost);
   ReplicatedStorage.GhostVisibilityHelper.FireClient(Ghost, GhostVisibilityHelperCommand.GhostIsHidden);
 
-  // Testing
-  Luigis.forEach(function (luigi) {
-    function printPlayer(player: Player) {
-      print("%s entered the zone".format(player.Name));
-      if (Ghost.UserId === player.UserId) {
-        print("...and they are the Ghost!");
-        makePlayerVisible(Ghost);
-        ReplicatedStorage.GhostVisibilityHelper.FireClient(Ghost, GhostVisibilityHelperCommand.GhostBecomesVisible);
-      }
-    }
-    const zones = lightZones[luigi.UserId];
-    zones.L1.playerEntered.Connect(printPlayer);
-    zones.L2.playerEntered.Connect(printPlayer);
-    zones.L3.playerEntered.Connect(printPlayer);
-    zones.L4.playerEntered.Connect(printPlayer);
-    zones.L5.playerEntered.Connect(printPlayer);
-  });
+  // Trigger client setup.
+  ReplicatedStorage.GameStartEvent.FireAllClients();
+  // TODO: Start music.
+
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    wait(0.1);
+    task.wait(0.1);
     updateAwarenessForAll(Luigis, Ghost);
   }
 }

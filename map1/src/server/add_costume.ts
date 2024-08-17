@@ -1,6 +1,6 @@
 const ServerStorage = game.GetService("ServerStorage");
 
-const ghostJacket = ServerStorage.WaitForChild("GhostOutfit") as Accessory;
+const ghostJacket = ServerStorage.GhostItems.WaitForChild("GhostOutfit") as Accessory;
 
 export function addGhostOutfit(player: Player) {
   // Add now
