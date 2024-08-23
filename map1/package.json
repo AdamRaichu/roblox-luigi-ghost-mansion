@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@rbxts/roact": "^1.4.4-ts.0",
-    "@rbxts/topbar-plus": "^3.0.2-ts.2",
+    "@rbxts/topbar-plus": "^3.0.2",
     "@rbxts/zone-plus": "^3.2.0"
   }
 }
